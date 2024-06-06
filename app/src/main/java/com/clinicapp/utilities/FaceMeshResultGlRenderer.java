@@ -170,36 +170,36 @@ public class FaceMeshResultGlRenderer implements ResultGlRenderer<FaceMeshResult
 
       switch (POSITION) {
         case 1: {
-          drawLandmarks(
-                  result.multiFaceLandmarks().get(i).getLandmarkList(),
-                  FaceMeshConnections.FACEMESH_FACE_OVAL,
-                  FACE_MESH_COLOR,
-                  CONTOUR_THICKNESS);
-          drawConnectionFromIndex(
-                  result.multiFaceLandmarks().get(i).getLandmarkList(),
-                  EYES_FACE_MESH_INDEX,
-                  FACE_MESH_COLOR,
-                  CONTOUR_THICKNESS);
-          drawConnectionFromIndex(
-                  result.multiFaceLandmarks().get(i).getLandmarkList(),
-                  MOUTH_NOSE_FACE_MESH_INDEX,
-                  FACE_MESH_COLOR,
-                  CONTOUR_THICKNESS);
-          drawConnectionFromIndex(
-                  result.multiFaceLandmarks().get(i).getLandmarkList(),
-                  TO_MOUTH_MESH_INDEX,
-                  FACE_MESH_COLOR,
-                  CONTOUR_THICKNESS);
-          drawConnectionFromIndex(
-                  result.multiFaceLandmarks().get(i).getLandmarkList(),
-                  VERTICAL_MESH_INDEX,
-                  FACE_MESH_COLOR,
-                  CONTOUR_THICKNESS);
-          drawConnectionFromIndex(
-                  result.multiFaceLandmarks().get(i).getLandmarkList(),
-                  HORIZONTAL_MESH_INDEX,
-                  FACE_MESH_COLOR,
-                  CONTOUR_THICKNESS);
+//          drawLandmarks(
+//                  result.multiFaceLandmarks().get(i).getLandmarkList(),
+//                  FaceMeshConnections.FACEMESH_FACE_OVAL,
+//                  FACE_MESH_COLOR,
+//                  CONTOUR_THICKNESS);
+//          drawConnectionFromIndex(
+//                  result.multiFaceLandmarks().get(i).getLandmarkList(),
+//                  EYES_FACE_MESH_INDEX,
+//                  FACE_MESH_COLOR,
+//                  CONTOUR_THICKNESS);
+//          drawConnectionFromIndex(
+//                  result.multiFaceLandmarks().get(i).getLandmarkList(),
+//                  MOUTH_NOSE_FACE_MESH_INDEX,
+//                  FACE_MESH_COLOR,
+//                  CONTOUR_THICKNESS);
+//          drawConnectionFromIndex(
+//                  result.multiFaceLandmarks().get(i).getLandmarkList(),
+//                  TO_MOUTH_MESH_INDEX,
+//                  FACE_MESH_COLOR,
+//                  CONTOUR_THICKNESS);
+//          drawConnectionFromIndex(
+//                  result.multiFaceLandmarks().get(i).getLandmarkList(),
+//                  VERTICAL_MESH_INDEX,
+//                  FACE_MESH_COLOR,
+//                  CONTOUR_THICKNESS);
+//          drawConnectionFromIndex(
+//                  result.multiFaceLandmarks().get(i).getLandmarkList(),
+//                  HORIZONTAL_MESH_INDEX,
+//                  FACE_MESH_COLOR,
+//                  CONTOUR_THICKNESS);
           break;
         }
         case 2: {

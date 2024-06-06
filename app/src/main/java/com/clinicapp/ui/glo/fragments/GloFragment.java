@@ -877,17 +877,25 @@ public class GloFragment extends Fragment {
                     LandmarkProto.NormalizedLandmark left = result.multiFaceLandmarks().get(0).getLandmarkList().get(LEFT_FACE_LANDMARK_INDEX);
                     LandmarkProto.NormalizedLandmark nose = result.multiFaceLandmarks().get(0).getLandmarkList().get(TOP_FACE_LANDMARK_INDEX);
 
-//                    Log.e("cek ini", String.valueOf(chin.getX() * frameLayout.getWidth()));
+//                    Log.e("cek ini", String.format("apa ni " + (nose.getY() * frameLayout.getWidth() - safeZone) + "Pembanding" + (float) frameLayout.getHeight() / 2 ));
+//                    Log.e("cek ini", String.format("apa ni " + (nose.getY() * frameLayout.getWidth() + safeZone) + "Pembanding" + (float) frameLayout.getHeight() / 2 ));
 //                    Log.e("cek ini 2", String.valueOf(chin.getX() * frameLayout.getWidth() - safeZone));
                     if (faceTo != "") {
-                        Log.i("Check OVAL", String.format("apa "+faceTo) );
                         if (nose.getX() * frameLayout.getWidth() - safeZone <= (float) frameLayout.getWidth() / 2 &&
                             nose.getX() * frameLayout.getWidth() + safeZone >= (float) frameLayout.getWidth() / 2) {
                             //check distance
-                            if (nose.getY() * frameLayout.getHeight() - safeZone <= (float) frameLayout.getHeight() / 2 &&
-                                nose.getY() * frameLayout.getHeight() + safeZone >= (float) frameLayout.getHeight() / 2) {
+                            if (
+                                nose.getY() * frameLayout.getHeight() - safeZone <= (float) 150 &&
+                                nose.getY() * frameLayout.getHeight() + safeZone >= (float) 150 &&
+                                right.getX() * frameLayout.getWidth() - safeZone <= (float) 165 &&
+                                right.getX() * frameLayout.getWidth() + safeZone >= (float) 165 &&
+                                left.getX() * frameLayout.getWidth() - safeZone <= (float) 685 &&
+                                left.getX() * frameLayout.getWidth() + safeZone >= (float) 685
+                            ) {
                                 if (faceTo == "0" || faceTo == "pause") {
                                     paint.setColor(Color.GREEN);
+                                    mp.start();
+                                    tiktok();
                                 }
                             } else if (bridge.getY() * frameLayout.getHeight() - safeZone <= (float) frameLayout.getHeight() / 2 &&
                                         bridge.getY() * frameLayout.getHeight() + safeZone >= (float) frameLayout.getHeight() / 2 &&
