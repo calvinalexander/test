@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.clinicapp.ui.glo.fragments.GloHomeFragment"
+        android:label="Home"
+        tools:layout="@layout/fragment_glo_home">
+        <action
+            android:id="@+id/action_homeFragment_to_newPatientFragment"
+            app:destination="@id/newPatientFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_searchPatientFragment"
+            app:destination="@id/searchPatientFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/newPatientFragment"
+        android:name="com.clinicapp.ui.glo.fragments.GloNewPatientFragment"
+        android:label="New Patient"
+        tools:layout="@layout/fragment_glo_new_patient">
+        <action
+            android:id="@+id/action_newPatientFragment_to_selectShootPosition"
+            app:destination="@id/selectShootPosition" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/searchPatientFragment"
+        android:name="com.clinicapp.ui.glo.fragments.GloSearchPatientsFragment"
+        android:label="Search Patient"
+        tools:layout="@layout/fragment_glo_search_patients">
+        <action
+            android:id="@+id/action_searchPatientFragment_to_resultScreen"
+            app:destination="@id/resultScreen" />
+    </fragment>
+    <fragment
+        android:id="@+id/resultScreen"
+        android:name="com.clinicapp.ui.glo.fragments.GloSearchResultsContainerFragment"
+        android:label="Search Results"
+        tools:layout="@layout/fragment_glo_search_results">
+        <action
+            android:id="@+id/action_resultScreen_to_selectShootPosition"
+            app:destination="@id/selectShootPosition" />
+    </fragment>
+    <fragment
+        android:id="@+id/selectShootPosition"
+        android:name="com.clinicapp.ui.glo.fragments.GloPositionFragment"
+        android:label="fragment_portrait_image_selection"
+        tools:layout="@layout/fragment_glo_position">
+        <action
+            android:id="@+id/action_selectShootPosition_to_cameraFragment"
+            app:destination="@id/cameraFragment">
+            <argument
+                android:name="isPortrait"
+                android:defaultValue="true" />
+        </action>
+        <argument
+            android:name="DATA"
+            app:argType="com.clinicapp.models.Patient" />
+    </fragment>
+    <fragment
+        android:id="@+id/cameraFragment"
+        android:name="com.clinicapp.ui.glo.fragments.GloCameraFragment"
+        android:label="fragment_camera"
+        tools:layout="@layout/fragment_glo_camera">
+        <action
+            android:id="@+id/action_cameraFragment_to_returnToHomeScreen"
+            app:destination="@id/returnToHomeScreen" />
+        <argument
+            android:name="isPortrait"
+            android:defaultValue="true"
+            app:argType="boolean" />
+        <action
+            android:id="@+id/pophome"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/returnToHomeScreen"
+        android:name="com.clinicapp.ui.glo.fragments.ReturnToGloHomeFragment"
+        android:label="fragment_return_or_shoot_hair"
+        tools:layout="@layout/fragment_return_glo_home">
+        <action
+            android:id="@+id/action_returnToHomeScreen_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/homeFragment" />
+<!--        <argument-->
+<!--            android:name="isPortrait"-->
+<!--            android:defaultValue="true"-->
+<!--            app:argType="boolean" />-->
+    </fragment>
+
+</navigation>
