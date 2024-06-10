@@ -139,10 +139,10 @@ public class FaceMeshResultGlRenderer implements ResultGlRenderer<FaceMeshResult
 //              result.multiFaceLandmarks().get(i).getLandmarkList(),
 //              CHIN_LANDMARK_INDEX,
 //              POINT_COLOR);
-//      drawDotsOnLandmarks(
-//              result.multiFaceLandmarks().get(i).getLandmarkList(),
-//              EYES_BRIDGE_LANDMARK_INDEX,
-//              POINT_COLOR);
+      drawDotsOnLandmarks(
+              result.multiFaceLandmarks().get(i).getLandmarkList(),
+              EYES_BRIDGE_LANDMARK_INDEX,
+              POINT_COLOR);
 //      drawDotsOnLandmarks(
 //              result.multiFaceLandmarks().get(i).getLandmarkList(),
 //              LEFT_EYE_LANDMARK_INDEX,

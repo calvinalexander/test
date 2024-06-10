@@ -134,6 +134,7 @@ public class GloFragment extends Fragment {
     boolean isCaptured = false;
     String from;
     String faceTo = "0";
+    String audioStoopp = "0";
     boolean leftRight = false;
     ArrayList<ArrayList<Float>> arrayFace = new ArrayList<ArrayList<Float>>();
     ArrayList<Float> eyeXY = new ArrayList<Float>();
@@ -406,7 +407,9 @@ public class GloFragment extends Fragment {
         viewModel = new ViewModelProvider(this).get(GloCameraViewModel.class);
         mainViewModel = new ViewModelProvider(getActivity()).get(MainViewModel.class);
 
-        mp = MediaPlayer.create(getActivity(), R.raw.camera_shutter_click);
+//        mp = MediaPlayer.create(getActivity(), R.raw.camera_shutter_click);
+//        mp = MediaPlayer.create(getActivity(), R.raw.capture_done_v3);
+        mp = MediaPlayer.create(getActivity(), R.raw.hold_still_v2);
 
         if (!from.equals("closeup")) {
             cameraExecutor = Executors.newSingleThreadExecutor();
@@ -885,184 +888,171 @@ public class GloFragment extends Fragment {
                             nose.getX() * frameLayout.getWidth() + safeZone >= (float) frameLayout.getWidth() / 2) {
                             //check distance
                             if (
-                                nose.getY() * frameLayout.getHeight() - safeZone <= (float) 150 &&
-                                nose.getY() * frameLayout.getHeight() + safeZone >= (float) 150 &&
-                                right.getX() * frameLayout.getWidth() - safeZone <= (float) 165 &&
-                                right.getX() * frameLayout.getWidth() + safeZone >= (float) 165 &&
-                                left.getX() * frameLayout.getWidth() - safeZone <= (float) 685 &&
-                                left.getX() * frameLayout.getWidth() + safeZone >= (float) 685
+                                    nose.getY() * frameLayout.getHeight() - safeZone <= (float) 210 &&
+                                            nose.getY() * frameLayout.getHeight() + safeZone >= (float) 210 &&
+                                            right.getX() * frameLayout.getWidth() - safeZone <= (float) 265 &&
+                                            right.getX() * frameLayout.getWidth() + safeZone >= (float) 265 &&
+                                            left.getX() * frameLayout.getWidth() - safeZone <= (float) 620 &&
+                                            left.getX() * frameLayout.getWidth() + safeZone >= (float) 620
                             ) {
-                                if (faceTo == "0" || faceTo == "pause") {
-                                    paint.setColor(Color.GREEN);
+                                if (audioStoopp == "0") {
+                                    audioStoopp = "sudah";
+                                    mp = MediaPlayer.create(getActivity(), R.raw.tilt_head_v4);
                                     mp.start();
-                                    tiktok();
                                 }
-                            } else if (bridge.getY() * frameLayout.getHeight() - safeZone <= (float) frameLayout.getHeight() / 2 &&
-                                        bridge.getY() * frameLayout.getHeight() + safeZone >= (float) frameLayout.getHeight() / 2 &&
-                                        faceTo == "up") {
+                                faceTo = "ready";
                                 paint.setColor(Color.GREEN);
-                            } else if (chin.getY() * frameLayout.getHeight() - safeZone <= (float) frameLayout.getHeight() / 2 &&
-                                        chin.getY() * frameLayout.getHeight() + safeZone >= (float) frameLayout.getHeight() / 2 &&
-                                        faceTo == "down") {
-                                paint.setColor(Color.GREEN);
-                            } else {
-                                paint.setColor(Color.RED);
                             }
+
                             paint.setStyle(Paint.Style.STROKE);
-                            canvas.drawOval(111+10,150,777-10,970, paint);
+                            canvas.drawOval(220,220,670,860, paint);
 
-//                            paint.setStyle(Paint.Style.STROKE);
-//                            canvas.drawCircle(frameLayout.getWidth() / 2, frameLayout.getHeight() / 2, radius, paint);
-
-                            if (right.getX() * frameLayout.getWidth() - safeZone <= (float) frameLayout.getWidth() / 3 &&
-                                right.getX() * frameLayout.getWidth() + safeZone >= (float) frameLayout.getWidth() / 3) {
+                            if (    bridge.getY() * frameLayout.getHeight() - safeZone <= (float) 670 &&
+                                    bridge.getY() * frameLayout.getHeight() + safeZone >= (float) 650 && faceTo == "ready" ) {
                                 paint.setColor(Color.GREEN);
+                                if(audioStoopp == "sudah"){
+                                    audioStoopp = "done";
+                                    mp.stop();
+                                    mp = MediaPlayer.create(getActivity(), R.raw.hold_still_v2);
+                                    mp.start();
+                                }
+
+                                if (cameraHelper != null && !photoTaken) {
+                                    photoTaken = true;
+                                        take();
+                                }
+
+
                             } else {
                                 paint.setColor(Color.RED);
                             }
-//                            canvas.drawCircle(frameLayout.getWidth() / 3, right.getY() * frameLayout.getHeight(), radius, paint);
-                            if (left.getX() * frameLayout.getWidth() - safeZone <= (float) (frameLayout.getWidth() / 3) * 2 &&
-                                left.getX() * frameLayout.getWidth() + safeZone >= (float) frameLayout.getWidth() / 3 * 2) {
-                                paint.setColor(Color.GREEN);
-                            } else {
-                                paint.setColor(Color.RED);
-                            }
-//                            canvas.drawCircle(frameLayout.getWidth() / 3 * 2, left.getY() * frameLayout.getHeight(), radius, paint);
-//                            if(chin.getX() * frameLayout.getWidth()  - safeZone <= (float) frameLayout.getWidth() / 2 && chin.getX() * frameLayout.getWidth() + safeZone >= (float) frameLayout.getWidth() / 2) {
-//                                paint.setColor(Color.GREEN);
-//                            }else{
-//                                paint.setColor(Color.RED);
-//                            }
-//                            canvas.drawCircle(frameLayout.getWidth() / 2,chin.getY() * frameLayout.getHeight(), 20, paint);
-
-//                            canvas.save();
-
+                            canvas.drawLine(111,670,777,670, paint);
 
                             canvas.save();
 
-                            if (right.getX() * frameLayout.getWidth() <= (float) frameLayout.getWidth() / 3 + safeZone && right.getX() * frameLayout.getWidth() >= (float) frameLayout.getWidth() / 3 - safeZone
-                                    && left.getX() * frameLayout.getWidth() <= (float) frameLayout.getWidth() / 3 * 2 + safeZone && left.getX() * frameLayout.getWidth() >= (float) frameLayout.getWidth() / 3 * 2 - safeZone) {
-
-                                if (faceTo == "0" || faceTo == "pause") {
-                                    if (nose.getY() * frameLayout.getHeight() - safeZone <= (float) frameLayout.getHeight() / 2 && nose.getY() * frameLayout.getHeight() + safeZone >= (float) frameLayout.getHeight() / 2
-//                                        chin.getX() * frameLayout.getWidth() - safeZone <= (float) frameLayout.getWidth() / 2 && chin.getX() * frameLayout.getWidth() + safeZone >= (float) frameLayout.getWidth() / 2
-                                    ) {
-//                                    if(abs(right.getX() * frameLayout.getWidth() - nose.getX() * frameLayout.getWidth())/frameLayout.getWidth() * 100 < faceClose){
-//                                        paint.setTextSize(50);
-//                                        paint.setStrokeWidth(20);
-//                                        paint.setStyle(Paint.Style.FILL);
-//                                        paint.setColor(Color.RED);
-//                                        canvas.drawText("Get Closer",frameLayout.getWidth() / 2 - 100,frameLayout.getHeight() / 2 - 20,paint);
-//                                    }else {
-                                        faceTo = "ready";
-                                        mp.start();
+//                            if (right.getX() * frameLayout.getWidth() <= (float) frameLayout.getWidth() / 3 + safeZone && right.getX() * frameLayout.getWidth() >= (float) frameLayout.getWidth() / 3 - safeZone
+//                                    && left.getX() * frameLayout.getWidth() <= (float) frameLayout.getWidth() / 3 * 2 + safeZone && left.getX() * frameLayout.getWidth() >= (float) frameLayout.getWidth() / 3 * 2 - safeZone) {
+//
+//                                if (faceTo == "0" || faceTo == "pause") {
+//                                    if (nose.getY() * frameLayout.getHeight() - safeZone <= (float) frameLayout.getHeight() / 2 && nose.getY() * frameLayout.getHeight() + safeZone >= (float) frameLayout.getHeight() / 2
+////                                        chin.getX() * frameLayout.getWidth() - safeZone <= (float) frameLayout.getWidth() / 2 && chin.getX() * frameLayout.getWidth() + safeZone >= (float) frameLayout.getWidth() / 2
+//                                    ) {
+////                                    if(abs(right.getX() * frameLayout.getWidth() - nose.getX() * frameLayout.getWidth())/frameLayout.getWidth() * 100 < faceClose){
+////                                        paint.setTextSize(50);
+////                                        paint.setStrokeWidth(20);
+////                                        paint.setStyle(Paint.Style.FILL);
+////                                        paint.setColor(Color.RED);
+////                                        canvas.drawText("Get Closer",frameLayout.getWidth() / 2 - 100,frameLayout.getHeight() / 2 - 20,paint);
+////                                    }else {
+////                                        faceTo = "ready";
+////                                        mp.start();
+////                                    }
 //                                    }
-                                    }
-                                }
-                                ArrayList<Float> temp = new ArrayList<Float>();
-                                if (faceTo == "ready") {
-                                    if (!arrayFace.isEmpty()) {
-                                        if (faceTo != "up") {
-                                            faceTo = "down";
-                                            temp.add(chin.getX());
-                                            temp.add(chin.getY());
-                                            temp.add(bridge.getX());
-                                            temp.add(bridge.getY());
-                                            temp.add(right.getX());
-                                            temp.add(right.getY());
-                                            temp.add(left.getX());
-                                            temp.add(left.getY());
-                                            temp.add(nose.getX());
-                                            temp.add(nose.getY());
-                                            temp.add(0.001f);
-                                            arrayFace.add(temp);
-                                        }
-                                    } else {
-                                        faceTo = "up";
-                                        temp.add(chin.getX());
-                                        temp.add(chin.getY());
-                                        temp.add(bridge.getX());
-                                        temp.add(bridge.getY());
-                                        temp.add(right.getX());
-                                        temp.add(right.getY());
-                                        temp.add(left.getX());
-                                        temp.add(left.getY());
-                                        temp.add(nose.getX());
-                                        temp.add(nose.getY());
-                                        temp.add(0.0f);
-                                        arrayFace.add(temp);
-                                    }
-                                }
-                                if (bridge.getY() * frameLayout.getHeight() - safeZone <= (float) frameLayout.getHeight() / 2 && bridge.getY() * frameLayout.getHeight() + safeZone >= (float) frameLayout.getHeight() / 2 && faceTo == "up"
-//                                    chin.getX() * frameLayout.getWidth() - safeZone <= (float) frameLayout.getWidth() / 2 && chin.getX() * frameLayout.getWidth() + safeZone >= (float) frameLayout.getWidth() / 2
-                                ) {
-                                    mp.start();
-                                    faceTo = "pause";
-                                }
-                                if (chin.getY() * frameLayout.getHeight() - safeZone <= (float) frameLayout.getHeight() / 2 && chin.getY() * frameLayout.getHeight() + safeZone >= (float) frameLayout.getHeight() / 2 && faceTo == "down"
-//                                    chin.getX() * frameLayout.getWidth() - safeZone <= (float) frameLayout.getWidth() / 2 && chin.getX() * frameLayout.getWidth() + safeZone >= (float) frameLayout.getWidth() / 2
-                                ) {
-                                    mp.start();
-                                    faceTo = "";
-                                }
-
-                            }
+//                                }
+////                                ArrayList<Float> temp = new ArrayList<Float>();
+////                                if (faceTo == "ready") {
+//////                                    if (!arrayFace.isEmpty()) {
+//////                                        if (faceTo != "up") {
+//////                                            faceTo = "down";
+//////                                            temp.add(chin.getX());
+//////                                            temp.add(chin.getY());
+//////                                            temp.add(bridge.getX());
+//////                                            temp.add(bridge.getY());
+//////                                            temp.add(right.getX());
+//////                                            temp.add(right.getY());
+//////                                            temp.add(left.getX());
+//////                                            temp.add(left.getY());
+//////                                            temp.add(nose.getX());
+//////                                            temp.add(nose.getY());
+//////                                            temp.add(0.001f);
+//////                                            arrayFace.add(temp);
+//////                                        }
+//////                                    } else {
+//////                                        faceTo = "up";
+//////                                        temp.add(chin.getX());
+//////                                        temp.add(chin.getY());
+//////                                        temp.add(bridge.getX());
+//////                                        temp.add(bridge.getY());
+//////                                        temp.add(right.getX());
+//////                                        temp.add(right.getY());
+//////                                        temp.add(left.getX());
+//////                                        temp.add(left.getY());
+//////                                        temp.add(nose.getX());
+//////                                        temp.add(nose.getY());
+//////                                        temp.add(0.0f);
+//////                                        arrayFace.add(temp);
+//////                                    }
+////                                }
+//                                if (bridge.getY() * frameLayout.getHeight() - safeZone <= (float) frameLayout.getHeight() / 2 && bridge.getY() * frameLayout.getHeight() + safeZone >= (float) frameLayout.getHeight() / 2 && faceTo == "up"
+////                                    chin.getX() * frameLayout.getWidth() - safeZone <= (float) frameLayout.getWidth() / 2 && chin.getX() * frameLayout.getWidth() + safeZone >= (float) frameLayout.getWidth() / 2
+//                                ) {
+////                                    mp.start();
+////                                    faceTo = "pause";
+//                                }
+//                                if (chin.getY() * frameLayout.getHeight() - safeZone <= (float) frameLayout.getHeight() / 2 && chin.getY() * frameLayout.getHeight() + safeZone >= (float) frameLayout.getHeight() / 2 && faceTo == "down"
+////                                    chin.getX() * frameLayout.getWidth() - safeZone <= (float) frameLayout.getWidth() / 2 && chin.getX() * frameLayout.getWidth() + safeZone >= (float) frameLayout.getWidth() / 2
+//                                ) {
+////                                    mp.start();
+////                                    faceTo = "";
+//                                }
+//
+//                            }
                         }
                     }
-                    if (faceTo == "") {
-                        int[] maxFace = findMaxProductIndex(arrayFace);
-//                        Log.e("cek nilai 2", Arrays.toString(maxFace) + " " + frameLayout.getHeight());
-//                        Log.e("cek nilai 3", String.valueOf(arrayFace.get(maxFace[0])));
-                        Float[] chinArr = {arrayFace.get(maxFace[0]).get(0) * frameLayout.getWidth(), arrayFace.get(maxFace[0]).get(1) * frameLayout.getHeight()};
-                        Float[] bridgeArr = {arrayFace.get(maxFace[0]).get(2) * frameLayout.getWidth(), arrayFace.get(maxFace[0]).get(3) * frameLayout.getHeight()};
-                        Float[] rightArr = {arrayFace.get(maxFace[0]).get(4) * frameLayout.getWidth(), arrayFace.get(maxFace[0]).get(5) * frameLayout.getHeight()};
-                        Float[] leftArr = {arrayFace.get(maxFace[0]).get(6) * frameLayout.getWidth(), arrayFace.get(maxFace[0]).get(7) * frameLayout.getHeight()};
-                        if (
-                                chin.getX() * frameLayout.getWidth() <= chinArr[0] + safeZone && chin.getX() * frameLayout.getWidth() >= chinArr[0] - safeZone &&
-                                        chin.getY() * frameLayout.getHeight() >= chinArr[1] - safeZone && chin.getY() * frameLayout.getHeight() <= chinArr[1] + safeZone
-                                        && bridge.getX() * frameLayout.getWidth() <= bridgeArr[0] + safeZone && bridge.getX() * frameLayout.getWidth() >= bridgeArr[0] - safeZone &&
-                                        bridge.getY() * frameLayout.getHeight() >= bridgeArr[1] - safeZone && bridge.getY() * frameLayout.getHeight() <= bridgeArr[1] + safeZone
-                                        && right.getX() * frameLayout.getWidth() <= rightArr[0] + safeZone && right.getX() * frameLayout.getWidth() >= rightArr[0] - safeZone
-                                        && right.getY() * frameLayout.getHeight() <= rightArr[1] + safeZone && right.getY() * frameLayout.getHeight() >= rightArr[1] - safeZone
-                                        && left.getX() * frameLayout.getWidth() <= leftArr[0] + safeZone && left.getX() * frameLayout.getWidth() >= leftArr[0] - safeZone
-                                        && left.getY() * frameLayout.getHeight() <= leftArr[1] + safeZone && left.getY() * frameLayout.getHeight() >= leftArr[1] - safeZone
-                        ) {
-                            paint.setColor(Color.GREEN);
-                        }else {
-                            paint.setColor(Color.RED);
-                        }
-                        paint.setStyle(Paint.Style.STROKE);
-                        canvas.drawCircle(chinArr[0], chinArr[1], radius, paint);
-                        canvas.drawCircle(bridgeArr[0], bridgeArr[1], radius, paint);
-//                        canvas.drawCircle(rightArr[0] - 30, rightArr[1], 10, paint);
-//                        canvas.drawCircle(leftArr[0] + 30, leftArr[1], 10, paint);
-                        canvas.drawCircle(rightArr[0], rightArr[1], radius, paint);
-                        canvas.drawCircle(leftArr[0], leftArr[1], radius, paint);
-                        canvas.save();
-
-                        if (
-                                chin.getX() * frameLayout.getWidth() <= chinArr[0] + safeZone && chin.getX() * frameLayout.getWidth() >= chinArr[0] - safeZone &&
-                                        chin.getY() * frameLayout.getHeight() >= chinArr[1] - safeZone && chin.getY() * frameLayout.getHeight() <= chinArr[1] + safeZone
-                                        && bridge.getX() * frameLayout.getWidth() <= bridgeArr[0] + safeZone && bridge.getX() * frameLayout.getWidth() >= bridgeArr[0] - safeZone &&
-                                        bridge.getY() * frameLayout.getHeight() >= bridgeArr[1] - safeZone && bridge.getY() * frameLayout.getHeight() <= bridgeArr[1] + safeZone
-                                        && right.getX() * frameLayout.getWidth() <= rightArr[0] + safeZone && right.getX() * frameLayout.getWidth() >= rightArr[0] - safeZone
-                                        && right.getY() * frameLayout.getHeight() <= rightArr[1] + safeZone && right.getY() * frameLayout.getHeight() >= rightArr[1] - safeZone
-                                        && left.getX() * frameLayout.getWidth() <= leftArr[0] + safeZone && left.getX() * frameLayout.getWidth() >= leftArr[0] - safeZone
-                                        && left.getY() * frameLayout.getHeight() <= leftArr[1] + safeZone && left.getY() * frameLayout.getHeight() >= leftArr[1] - safeZone
-                        ) {
-                            tiktok();
-                            if (faceReady) {
-                                if (cameraHelper != null && !photoTaken) {
-                                    photoTaken = true;
-                                    take();
-                                }
-                                faceAlgined = false;
-                            }
-                        } else {
-                            status.setTextColor(Color.RED);
-                            faceAlgined = false;
-                        }
-                    }
+//                    if (faceTo == "") {
+////                        int[] maxFace = findMaxProductIndex(arrayFace);
+//////                        Log.e("cek nilai 2", Arrays.toString(maxFace) + " " + frameLayout.getHeight());
+//////                        Log.e("cek nilai 3", String.valueOf(arrayFace.get(maxFace[0])));
+////                        Float[] chinArr = {arrayFace.get(maxFace[0]).get(0) * frameLayout.getWidth(), arrayFace.get(maxFace[0]).get(1) * frameLayout.getHeight()};
+////                        Float[] bridgeArr = {arrayFace.get(maxFace[0]).get(2) * frameLayout.getWidth(), arrayFace.get(maxFace[0]).get(3) * frameLayout.getHeight()};
+////                        Float[] rightArr = {arrayFace.get(maxFace[0]).get(4) * frameLayout.getWidth(), arrayFace.get(maxFace[0]).get(5) * frameLayout.getHeight()};
+////                        Float[] leftArr = {arrayFace.get(maxFace[0]).get(6) * frameLayout.getWidth(), arrayFace.get(maxFace[0]).get(7) * frameLayout.getHeight()};
+////                        if (
+////                                chin.getX() * frameLayout.getWidth() <= chinArr[0] + safeZone && chin.getX() * frameLayout.getWidth() >= chinArr[0] - safeZone &&
+////                                        chin.getY() * frameLayout.getHeight() >= chinArr[1] - safeZone && chin.getY() * frameLayout.getHeight() <= chinArr[1] + safeZone
+////                                        && bridge.getX() * frameLayout.getWidth() <= bridgeArr[0] + safeZone && bridge.getX() * frameLayout.getWidth() >= bridgeArr[0] - safeZone &&
+////                                        bridge.getY() * frameLayout.getHeight() >= bridgeArr[1] - safeZone && bridge.getY() * frameLayout.getHeight() <= bridgeArr[1] + safeZone
+////                                        && right.getX() * frameLayout.getWidth() <= rightArr[0] + safeZone && right.getX() * frameLayout.getWidth() >= rightArr[0] - safeZone
+////                                        && right.getY() * frameLayout.getHeight() <= rightArr[1] + safeZone && right.getY() * frameLayout.getHeight() >= rightArr[1] - safeZone
+////                                        && left.getX() * frameLayout.getWidth() <= leftArr[0] + safeZone && left.getX() * frameLayout.getWidth() >= leftArr[0] - safeZone
+////                                        && left.getY() * frameLayout.getHeight() <= leftArr[1] + safeZone && left.getY() * frameLayout.getHeight() >= leftArr[1] - safeZone
+////                        ) {
+////                            paint.setColor(Color.GREEN);
+////                        }else {
+////                            paint.setColor(Color.RED);
+////                        }
+////                        paint.setStyle(Paint.Style.STROKE);
+////                        canvas.drawCircle(chinArr[0], chinArr[1], radius, paint);
+////                        canvas.drawCircle(bridgeArr[0], bridgeArr[1], radius, paint);
+//////                        canvas.drawCircle(rightArr[0] - 30, rightArr[1], 10, paint);
+//////                        canvas.drawCircle(leftArr[0] + 30, leftArr[1], 10, paint);
+////                        canvas.drawCircle(rightArr[0], rightArr[1], radius, paint);
+////                        canvas.drawCircle(leftArr[0], leftArr[1], radius, paint);
+////                        canvas.save();
+//
+////                        if (
+////                                chin.getX() * frameLayout.getWidth() <= chinArr[0] + safeZone && chin.getX() * frameLayout.getWidth() >= chinArr[0] - safeZone &&
+////                                        chin.getY() * frameLayout.getHeight() >= chinArr[1] - safeZone && chin.getY() * frameLayout.getHeight() <= chinArr[1] + safeZone
+////                                        && bridge.getX() * frameLayout.getWidth() <= bridgeArr[0] + safeZone && bridge.getX() * frameLayout.getWidth() >= bridgeArr[0] - safeZone &&
+////                                        bridge.getY() * frameLayout.getHeight() >= bridgeArr[1] - safeZone && bridge.getY() * frameLayout.getHeight() <= bridgeArr[1] + safeZone
+////                                        && right.getX() * frameLayout.getWidth() <= rightArr[0] + safeZone && right.getX() * frameLayout.getWidth() >= rightArr[0] - safeZone
+////                                        && right.getY() * frameLayout.getHeight() <= rightArr[1] + safeZone && right.getY() * frameLayout.getHeight() >= rightArr[1] - safeZone
+////                                        && left.getX() * frameLayout.getWidth() <= leftArr[0] + safeZone && left.getX() * frameLayout.getWidth() >= leftArr[0] - safeZone
+////                                        && left.getY() * frameLayout.getHeight() <= leftArr[1] + safeZone && left.getY() * frameLayout.getHeight() >= leftArr[1] - safeZone
+////                        ) {
+////                            tiktok();
+////                            if (faceReady) {
+////                                if (cameraHelper != null && !photoTaken) {
+////                                    photoTaken = true;
+////                                    take();
+////                                }
+////                                faceAlgined = false;
+////                            }
+////                        } else {
+////                            status.setTextColor(Color.RED);
+////                            faceAlgined = false;
+////                        }
+//                    }
 
                     break;
                 }
@@ -1468,6 +1458,7 @@ public class GloFragment extends Fragment {
         String fileName = System.currentTimeMillis() + "effect" + POSITION + ".jpg";
         mainfilename = fileName;
         File file = new File(Environment.getExternalStorageDirectory().toString() + "/Pictures", fileName);
+
         cameraHelper.takePicture(file, new ImageCapture.OnImageSavedCallback() {
             @Override
             public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
@@ -1475,6 +1466,8 @@ public class GloFragment extends Fragment {
                     @Override
                     public void run() {
                         showPreview(fileName);
+                        mp = MediaPlayer.create(getActivity(), R.raw.capture_done_v3);
+                        mp.start();
                     }
                 });
             }
