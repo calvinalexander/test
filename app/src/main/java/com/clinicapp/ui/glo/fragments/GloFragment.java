@@ -886,47 +886,30 @@ public class GloFragment extends Fragment {
                     if (faceTo != "") {
                         if (nose.getX() * frameLayout.getWidth() - safeZone <= (float) frameLayout.getWidth() / 2 &&
                             nose.getX() * frameLayout.getWidth() + safeZone >= (float) frameLayout.getWidth() / 2) {
-                            //check distance
+
                             if (
-                                    nose.getY() * frameLayout.getHeight() - safeZone <= (float) 210 &&
-                                            nose.getY() * frameLayout.getHeight() + safeZone >= (float) 210 &&
-                                            right.getX() * frameLayout.getWidth() - safeZone <= (float) 265 &&
-                                            right.getX() * frameLayout.getWidth() + safeZone >= (float) 265 &&
-                                            left.getX() * frameLayout.getWidth() - safeZone <= (float) 620 &&
-                                            left.getX() * frameLayout.getWidth() + safeZone >= (float) 620
+                                nose.getY() * frameLayout.getHeight() - safeZone <= (float) 210 &&
+                                nose.getY() * frameLayout.getHeight() + safeZone >= (float) 210 &&
+                                right.getX() * frameLayout.getWidth() - safeZone <= (float) 265 &&
+                                right.getX() * frameLayout.getWidth() + safeZone >= (float) 265 &&
+                                left.getX() * frameLayout.getWidth() - safeZone <= (float) 620 &&
+                                left.getX() * frameLayout.getWidth() + safeZone >= (float) 620
                             ) {
+                                paint.setColor(Color.GREEN);
                                 if (audioStoopp == "0") {
-                                    audioStoopp = "sudah";
-                                    mp = MediaPlayer.create(getActivity(), R.raw.tilt_head_v4);
+                                    audioStoopp = "done";
+                                    mp = MediaPlayer.create(getActivity(), R.raw.hold_still_v2);
                                     mp.start();
                                 }
-                                faceTo = "ready";
-                                paint.setColor(Color.GREEN);
+                                if (cameraHelper != null && !photoTaken) {
+                                    photoTaken = true;
+                                    take();
+                                }
                             }
 
                             paint.setStyle(Paint.Style.STROKE);
                             canvas.drawOval(220,220,670,860, paint);
 
-                            if (    bridge.getY() * frameLayout.getHeight() - safeZone <= (float) 670 &&
-                                    bridge.getY() * frameLayout.getHeight() + safeZone >= (float) 650 && faceTo == "ready" ) {
-                                paint.setColor(Color.GREEN);
-                                if(audioStoopp == "sudah"){
-                                    audioStoopp = "done";
-                                    mp.stop();
-                                    mp = MediaPlayer.create(getActivity(), R.raw.hold_still_v2);
-                                    mp.start();
-                                }
-
-                                if (cameraHelper != null && !photoTaken) {
-                                    photoTaken = true;
-                                        take();
-                                }
-
-
-                            } else {
-                                paint.setColor(Color.RED);
-                            }
-                            canvas.drawLine(111,670,777,670, paint);
 
                             canvas.save();
 
@@ -1085,36 +1068,76 @@ public class GloFragment extends Fragment {
                     double topSideTop = ((double) offsetViewBounds.top - safeZone) / frameLayout.getHeight();
                     double topSideBottom = ((double) offsetViewBounds.top + safeZone + views.ivEyeTopDot.getHeight()) / frameLayout.getHeight();
 
-                    LandmarkProto.NormalizedLandmark right = result.multiFaceLandmarks().get(0).getLandmarkList().get(RIGHT_EYE_LANDMARK_INDEX);
-                    LandmarkProto.NormalizedLandmark left = result.multiFaceLandmarks().get(0).getLandmarkList().get(LEFT_EYE_LANDMARK_INDEX);
+                    LandmarkProto.NormalizedLandmark right = result.multiFaceLandmarks().get(0).getLandmarkList().get(RIGHT_FACE_LANDMARK_INDEX);
+                    LandmarkProto.NormalizedLandmark left = result.multiFaceLandmarks().get(0).getLandmarkList().get(LEFT_FACE_LANDMARK_INDEX);
                     LandmarkProto.NormalizedLandmark top = result.multiFaceLandmarks().get(0).getLandmarkList().get(10);
                     LandmarkProto.NormalizedLandmark bottom = result.multiFaceLandmarks().get(0).getLandmarkList().get(2);
                     LandmarkProto.NormalizedLandmark nose = result.multiFaceLandmarks().get(0).getLandmarkList().get(NOSE_LANDMARK_INDEX);
                     LandmarkProto.NormalizedLandmark chin = result.multiFaceLandmarks().get(0).getLandmarkList().get(CHIN_LANDMARK_INDEX);
+                    LandmarkProto.NormalizedLandmark bridge = result.multiFaceLandmarks().get(0).getLandmarkList().get(EYES_BRIDGE_LANDMARK_INDEX);
 
-                    paint.setStyle(Paint.Style.STROKE);
-                    if (right.getX() * frameLayout.getWidth() - safeZone <= (float) frameLayout.getWidth() / 3 && right.getX() * frameLayout.getWidth() + safeZone >= (float) frameLayout.getWidth() / 3) {
-                        paint.setColor(Color.GREEN);
-                    } else {
-                        paint.setColor(Color.RED);
-                    }
-                    canvas.drawCircle(frameLayout.getWidth() / 3, right.getY() * frameLayout.getHeight(), radius, paint);
-                    if (left.getX() * frameLayout.getWidth() - safeZone <= (float) (frameLayout.getWidth() / 3) * 2 && left.getX() * frameLayout.getWidth() + safeZone >= (float) frameLayout.getWidth() / 3 * 2) {
-                        paint.setColor(Color.GREEN);
-                    } else {
-                        paint.setColor(Color.RED);
-                    }
-                    canvas.drawCircle(frameLayout.getWidth() / 3 * 2, left.getY() * frameLayout.getHeight(), radius, paint);
+//                    paint.setStyle(Paint.Style.STROKE);
+//                    if (right.getX() * frameLayout.getWidth() - safeZone <= (float) frameLayout.getWidth() / 3 && right.getX() * frameLayout.getWidth() + safeZone >= (float) frameLayout.getWidth() / 3) {
+//                        paint.setColor(Color.GREEN);
+//                    } else {
+//                        paint.setColor(Color.RED);
+//                    }
+//                    canvas.drawCircle(frameLayout.getWidth() / 3, right.getY() * frameLayout.getHeight(), radius, paint);
+//                    if (left.getX() * frameLayout.getWidth() - safeZone <= (float) (frameLayout.getWidth() / 3) * 2 && left.getX() * frameLayout.getWidth() + safeZone >= (float) frameLayout.getWidth() / 3 * 2) {
+//                        paint.setColor(Color.GREEN);
+//                    } else {
+//                        paint.setColor(Color.RED);
+//                    }
+//                    canvas.drawCircle(frameLayout.getWidth() / 3 * 2, left.getY() * frameLayout.getHeight(), radius, paint);
 
                     if (faceTo != "") {
-                        if (nose.getX() * frameLayout.getWidth() - safeZone <= (float) frameLayout.getWidth() / 2 && nose.getX() * frameLayout.getWidth() + safeZone >= (float) frameLayout.getWidth() / 2) {
+                        if (nose.getX() * frameLayout.getWidth() - safeZone <= (float) frameLayout.getWidth() / 2 &&
+                            nose.getX() * frameLayout.getWidth() + safeZone >= (float) frameLayout.getWidth() / 2) {
 //                            paint.setStyle(Paint.Style.STROKE);
-                            if (nose.getY() * frameLayout.getHeight() - safeZone <= (float) frameLayout.getHeight() / 2 && nose.getY() * frameLayout.getHeight() + safeZone >= (float) frameLayout.getHeight() / 2) {
+                            if (
+//                                nose.getY() * frameLayout.getHeight() - safeZone <= (float) frameLayout.getHeight() / 2 &&
+//                                nose.getY() * frameLayout.getHeight() + safeZone >= (float) frameLayout.getHeight() / 2
+                                top.getY() * frameLayout.getHeight() - safeZone <= (float) 210 &&
+                                top.getY() * frameLayout.getHeight() + safeZone >= (float) 210 &&
+                                right.getX() * frameLayout.getWidth() - safeZone <= (float) 265 &&
+                                right.getX() * frameLayout.getWidth() + safeZone >= (float) 265 &&
+                                left.getX() * frameLayout.getWidth() - safeZone <= (float) 620 &&
+                                left.getX() * frameLayout.getWidth() + safeZone >= (float) 620
+
+                            ) {
+                                if(audioStoopp == "0"){
+                                    audioStoopp = "sudah";
+                                    mp = MediaPlayer.create(getActivity(), R.raw.tilt_head_v4);
+                                    mp.start();
+                                }
+                                faceTo = "ready";
                                 paint.setColor(Color.GREEN);
                             } else {
                                 paint.setColor(Color.RED);
                             }
-                            canvas.drawCircle(frameLayout.getWidth() / 2, frameLayout.getHeight() / 2, radius, paint);
+                            paint.setStyle(Paint.Style.STROKE);
+//                            canvas.drawCircle(frameLayout.getWidth() / 2, frameLayout.getHeight() / 2, radius, paint);
+                            canvas.drawOval(220,220,670,860, paint);
+
+                            if(faceTo == "ready"){
+
+                                if (bridge.getY() * frameLayout.getHeight() - safeZone <= (float) 670 &&
+                                    bridge.getY() * frameLayout.getHeight() + safeZone >= (float) 650) {
+                                    paint.setColor(Color.GREEN);
+                                    if (cameraHelper != null && !photoTaken) {
+                                        photoTaken = true;
+                                        take();
+                                    }
+
+
+                                } else {
+                                    paint.setColor(Color.RED);
+                                }
+                                canvas.drawLine(111,670,777,670, paint);
+
+                            }
+
+
 
 //                            canvas.save();
 //                            if(abs(right.getX() * frameLayout.getWidth() - nose.getX() * frameLayout.getWidth())/frameLayout.getWidth() * 100 < faceClose){
@@ -1122,52 +1145,52 @@ public class GloFragment extends Fragment {
 //                                paint.setColor(Color.RED);
 //                                canvas.drawText("Get Closer",frameLayout.getWidth() / 2 - 100,frameLayout.getHeight() / 2 - 20,paint);
 //                            }else {
-                                if (nose.getY() * frameLayout.getHeight() - safeZone <= (float) frameLayout.getHeight() / 2 && nose.getY() * frameLayout.getHeight() + safeZone >= (float) frameLayout.getHeight() / 2
-                                && left.getX() * frameLayout.getWidth() - safeZone <= (float) (frameLayout.getWidth() / 3) * 2 && left.getX() * frameLayout.getWidth() + safeZone >= (float) frameLayout.getWidth() / 3 * 2
-                                && right.getX() * frameLayout.getWidth() - safeZone <= (float) frameLayout.getWidth() / 3 && right.getX() * frameLayout.getWidth() + safeZone >= (float) frameLayout.getWidth() / 3) {
-                                    faceTo = "";
-                                    mp.start();
-                                    eyeXY.add(chin.getX() * frameLayout.getWidth());
-                                    eyeXY.add(chin.getY() * frameLayout.getHeight() + 50);
-                                }
+//                                if (nose.getY() * frameLayout.getHeight() - safeZone <= (float) frameLayout.getHeight() / 2 && nose.getY() * frameLayout.getHeight() + safeZone >= (float) frameLayout.getHeight() / 2
+//                                && left.getX() * frameLayout.getWidth() - safeZone <= (float) (frameLayout.getWidth() / 3) * 2 && left.getX() * frameLayout.getWidth() + safeZone >= (float) frameLayout.getWidth() / 3 * 2
+//                                && right.getX() * frameLayout.getWidth() - safeZone <= (float) frameLayout.getWidth() / 3 && right.getX() * frameLayout.getWidth() + safeZone >= (float) frameLayout.getWidth() / 3) {
+//                                    faceTo = "";
+//                                    mp.start();
+//                                    eyeXY.add(chin.getX() * frameLayout.getWidth());
+//                                    eyeXY.add(chin.getY() * frameLayout.getHeight() + 50);
+//                                }
 //                            }
                         }
                     }
-                    if (faceTo == "") {
-                        paint.setStyle(Paint.Style.FILL);
-                        try {
-                            if (nose.getY() * frameLayout.getHeight() - safeZone <= eyeXY.get(1) && nose.getY() * frameLayout.getHeight() + safeZone >= eyeXY.get(1)
-                                    && left.getX() * frameLayout.getWidth() - safeZone <= (float) (frameLayout.getWidth() / 3) * 2 && left.getX() * frameLayout.getWidth() + safeZone >= (float) frameLayout.getWidth() / 3 * 2
-                                    && right.getX() * frameLayout.getWidth() - safeZone <= (float) frameLayout.getWidth() / 3 && right.getX() * frameLayout.getWidth() + safeZone >= (float) frameLayout.getWidth() / 3) {
-                                paint.setColor(Color.GREEN);
-                            } else {
-                                paint.setColor(Color.RED);
-                            }
-
-                        canvas.drawLine(eyeXY.get(0) -100,
-                                eyeXY.get(1),
-                                eyeXY.get(0)+100,
-                                eyeXY.get(1), paint);
-                        canvas.save();
-                        if (nose.getY() * frameLayout.getHeight() - safeZone <= eyeXY.get(1) && nose.getY() * frameLayout.getHeight() + safeZone >= eyeXY.get(1)
-                                && left.getX() * frameLayout.getWidth() - safeZone <= (float) (frameLayout.getWidth() / 3) * 2 && left.getX() * frameLayout.getWidth() + safeZone >= (float) frameLayout.getWidth() / 3 * 2
-                                && right.getX() * frameLayout.getWidth() - safeZone <= (float) frameLayout.getWidth() / 3 && right.getX() * frameLayout.getWidth() + safeZone >= (float) frameLayout.getWidth() / 3) {
-                            tiktok();
-                            if (faceReady) {
-                                if (cameraHelper != null && !photoTaken2) {
-                                    photoTaken2 = true;
-                                    take();
-                                }
-                            }
-                        } else {
-                            status.setTextColor(Color.RED);
-                            faceAlgined = false;
-                        }}catch(Exception e) {
-                            //  Block of code to handle errors
-                            Log.e("error", String.valueOf(e));
-                            Log.e("error2", String.valueOf(eyeXY));
-                        }
-                    }
+//                    if (faceTo == "") {
+//                        paint.setStyle(Paint.Style.FILL);
+//                        try {
+//                            if (nose.getY() * frameLayout.getHeight() - safeZone <= eyeXY.get(1) && nose.getY() * frameLayout.getHeight() + safeZone >= eyeXY.get(1)
+//                                    && left.getX() * frameLayout.getWidth() - safeZone <= (float) (frameLayout.getWidth() / 3) * 2 && left.getX() * frameLayout.getWidth() + safeZone >= (float) frameLayout.getWidth() / 3 * 2
+//                                    && right.getX() * frameLayout.getWidth() - safeZone <= (float) frameLayout.getWidth() / 3 && right.getX() * frameLayout.getWidth() + safeZone >= (float) frameLayout.getWidth() / 3) {
+//                                paint.setColor(Color.GREEN);
+//                            } else {
+//                                paint.setColor(Color.RED);
+//                            }
+//
+//                        canvas.drawLine(eyeXY.get(0) -100,
+//                                eyeXY.get(1),
+//                                eyeXY.get(0)+100,
+//                                eyeXY.get(1), paint);
+//                        canvas.save();
+//                        if (nose.getY() * frameLayout.getHeight() - safeZone <= eyeXY.get(1) && nose.getY() * frameLayout.getHeight() + safeZone >= eyeXY.get(1)
+//                                && left.getX() * frameLayout.getWidth() - safeZone <= (float) (frameLayout.getWidth() / 3) * 2 && left.getX() * frameLayout.getWidth() + safeZone >= (float) frameLayout.getWidth() / 3 * 2
+//                                && right.getX() * frameLayout.getWidth() - safeZone <= (float) frameLayout.getWidth() / 3 && right.getX() * frameLayout.getWidth() + safeZone >= (float) frameLayout.getWidth() / 3) {
+//                            tiktok();
+//                            if (faceReady) {
+//                                if (cameraHelper != null && !photoTaken2) {
+//                                    photoTaken2 = true;
+//                                    take();
+//                                }
+//                            }
+//                        } else {
+//                            status.setTextColor(Color.RED);
+//                            faceAlgined = false;
+//                        }}catch(Exception e) {
+//                            //  Block of code to handle errors
+//                            Log.e("error", String.valueOf(e));
+//                            Log.e("error2", String.valueOf(eyeXY));
+//                        }
+//                    }
                     break;
                 }
 
@@ -1466,8 +1489,10 @@ public class GloFragment extends Fragment {
                     @Override
                     public void run() {
                         showPreview(fileName);
+                        mp.stop();
                         mp = MediaPlayer.create(getActivity(), R.raw.capture_done_v3);
                         mp.start();
+                        status.setTextColor(Color.GREEN);
                     }
                 });
             }
