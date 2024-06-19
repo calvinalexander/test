@@ -151,22 +151,22 @@ public class FaceMeshResultGlRenderer implements ResultGlRenderer<FaceMeshResult
 //              result.multiFaceLandmarks().get(i).getLandmarkList(),
 //              RIGHT_EYE_LANDMARK_INDEX,
 //              POINT_COLOR);
-      drawDotsOnLandmarks(
-              result.multiFaceLandmarks().get(i).getLandmarkList(),
-              TOP_FACE_LANDMARK_INDEX,
-              POINT_COLOR);
-      drawDotsOnLandmarks(
-              result.multiFaceLandmarks().get(i).getLandmarkList(),
-              BOTTOM_FACE_LANDMARK_INDEX,
-              POINT_COLOR);
-      drawDotsOnLandmarks(
-              result.multiFaceLandmarks().get(i).getLandmarkList(),
-              RIGHT_FACE_LANDMARK_INDEX,
-              POINT_COLOR);
-      drawDotsOnLandmarks(
-              result.multiFaceLandmarks().get(i).getLandmarkList(),
-              LEFT_FACE_LANDMARK_INDEX,
-              POINT_COLOR);
+//      drawDotsOnLandmarks(
+//              result.multiFaceLandmarks().get(i).getLandmarkList(),
+//              TOP_FACE_LANDMARK_INDEX,
+//              POINT_COLOR);
+//      drawDotsOnLandmarks(
+//              result.multiFaceLandmarks().get(i).getLandmarkList(),
+//              BOTTOM_FACE_LANDMARK_INDEX,
+//              POINT_COLOR);
+//      drawDotsOnLandmarks(
+//              result.multiFaceLandmarks().get(i).getLandmarkList(),
+//              RIGHT_FACE_LANDMARK_INDEX,
+//              POINT_COLOR);
+//      drawDotsOnLandmarks(
+//              result.multiFaceLandmarks().get(i).getLandmarkList(),
+//              LEFT_FACE_LANDMARK_INDEX,
+//              POINT_COLOR);
 
       switch (POSITION) {
         case 1: {
