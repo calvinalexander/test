@@ -1119,8 +1119,8 @@ public class GloFragment extends Fragment {
 
                             if(faceTo == "ready"){
 
-                                if (bridge.getY() * frameLayout.getHeight() - safeZone <= (float) 670 &&
-                                    bridge.getY() * frameLayout.getHeight() + safeZone >= (float) 650) {
+                                if (bridge.getY() * frameLayout.getHeight() - safeZone <= (float) frameLayout.getHeight() * 0.6f &&
+                                    bridge.getY() * frameLayout.getHeight() + safeZone >= (float) frameLayout.getHeight() * 0.6f) {
                                     paint.setColor(Color.GREEN);
                                     if (cameraHelper != null && !photoTaken2) {
                                         photoTaken2 = true;
@@ -1131,7 +1131,7 @@ public class GloFragment extends Fragment {
                                 } else {
                                     paint.setColor(Color.RED);
                                 }
-                                canvas.drawLine(111,670,777,670, paint);
+                                canvas.drawLine(frameLayout.getWidth() * 0.3f,frameLayout.getHeight() * 0.6f,frameLayout.getWidth() * 0.7f,frameLayout.getHeight() * 0.6f, paint);
 
                             }
 
@@ -1337,8 +1337,8 @@ public class GloFragment extends Fragment {
 
                     }
                     if(faceTo == "ready"){
-                                if (bridge.getX() * frameLayout.getHeight() - safeZone <= (float) 285 &&
-                                    bridge.getX() * frameLayout.getHeight() + safeZone >= (float) 285) {
+                                if (bridge.getX() * frameLayout.getHeight() - safeZone <= (float) frameLayout.getWidth() * 0.33f &&
+                                    bridge.getX() * frameLayout.getHeight() + safeZone >= (float) frameLayout.getWidth() * 0.33f) {
                                     paint.setColor(Color.GREEN);
                                     if (cameraHelper != null && !photoTaken4) {
                                         photoTaken4 = true;
@@ -1520,8 +1520,8 @@ public class GloFragment extends Fragment {
 //                        }
 //                    }
                     if(faceTo == "ready"){
-                        if (bridge.getX() * frameLayout.getHeight() - safeZone <= (float) 760 &&
-                                bridge.getX() * frameLayout.getHeight() + safeZone >= (float) 760) {
+                        if (bridge.getX() * frameLayout.getHeight() - safeZone <= (float) frameLayout.getWidth() * 0.87f &&
+                            bridge.getX() * frameLayout.getHeight() + safeZone >= (float) frameLayout.getWidth() * 0.87f) {
                             paint.setColor(Color.GREEN);
                             if (cameraHelper != null && !photoTaken5) {
                                 photoTaken5 = true;
@@ -1587,6 +1587,12 @@ public class GloFragment extends Fragment {
                         handler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
+                                try {
+                                    saveCaptureImage(fileName);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+
                                 setupStreamingModePipeline(InputType.CAMERA);
                                 nextEffect();
                                 inPreview = false;
