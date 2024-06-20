@@ -19,6 +19,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
+import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
@@ -409,6 +410,7 @@ public class GloFragment extends Fragment {
 //        mp = MediaPlayer.create(getActivity(), R.raw.capture_done_v3);
         mp = MediaPlayer.create(getActivity(), R.raw.hold_still_v2);
 
+
         if (!from.equals("closeup")) {
             cameraExecutor = Executors.newSingleThreadExecutor();
             setupLiveDemoUiComponents();
@@ -795,7 +797,7 @@ public class GloFragment extends Fragment {
     }
 
     private void logNoseLandmark(FaceMeshResult result, boolean showPixelValues) {
-        float safeZone = 30;
+        float safeZone = 125;
         float radius = 25;
         int faceClose = 18;
         if (result == null || result.multiFaceLandmarks().isEmpty()) {
@@ -1103,11 +1105,15 @@ public class GloFragment extends Fragment {
                                 left.getX() * frameLayout.getWidth() + safeZone >= (float) frameLayout.getWidth() * 0.74f
 
                             ) {
+                                Log.i("hold", audioStoopp);
+
                                 if(audioStoopp == "0"){
+
                                     audioStoopp = "sudah";
                                     mp = MediaPlayer.create(getActivity(), R.raw.tilt_head_v4);
                                     mp.start();
                                 }
+                                audioStoopp = "done";
                                 faceTo = "ready";
                                 paint.setColor(Color.GREEN);
                             } else {
@@ -1118,11 +1124,13 @@ public class GloFragment extends Fragment {
                             canvas.drawOval(frameLayout.getWidth() * 0.23f,frameLayout.getHeight() * 0.2f, frameLayout.getWidth() * 0.78f,frameLayout.getHeight() * 0.8f, paint);
 
                             if(faceTo == "ready"){
-
                                 if (bridge.getY() * frameLayout.getHeight() - safeZone <= (float) frameLayout.getHeight() * 0.6f &&
                                     bridge.getY() * frameLayout.getHeight() + safeZone >= (float) frameLayout.getHeight() * 0.6f) {
                                     paint.setColor(Color.GREEN);
+
                                     if (cameraHelper != null && !photoTaken2) {
+                                        mp.stop();
+                                        mp = MediaPlayer.create(getActivity(), R.raw.hold_still_v2);
                                         photoTaken2 = true;
                                         take();
                                     }
@@ -1577,26 +1585,37 @@ public class GloFragment extends Fragment {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        showPreview(fileName);
-                        mp.stop();
-                        mp = MediaPlayer.create(getActivity(), R.raw.capture_done_v3);
-                        mp.start();
-                        status.setTextColor(Color.GREEN);
-
                         Handler handler = new Handler();
+                        showPreview(fileName);
+                        int s = mp.getDuration();
+
                         handler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                try {
-                                    saveCaptureImage(fileName);
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
+                                mp.stop();
+                                mp = MediaPlayer.create(getActivity(), R.raw.camera_shutter_click_v3);
+                                mp.start();
+                                status.setTextColor(Color.GREEN);
+                                int s2 = mp.getDuration();
+                                Log.i("timer", s2 + "seconds");
 
-                                setupStreamingModePipeline(InputType.CAMERA);
-                                nextEffect();
-                                inPreview = false;
-                            }},3000);
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        try {
+                                            saveCaptureImage(fileName);
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+
+                                        setupStreamingModePipeline(InputType.CAMERA);
+                                        nextEffect();
+                                        inPreview = false;
+                                    }},s2 - 200);
+
+                            }},s-400);
+
+
                     }
                 });
             }
@@ -1665,34 +1684,34 @@ public class GloFragment extends Fragment {
         views.btNext.setVisibility(View.INVISIBLE);
         views.btRetake.setVisibility(View.INVISIBLE);
         Log.e("position", String.valueOf(POSITION));
-        if (POSITION == 1) {
-            SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putString("front", fileName);
-            editor.apply();
-            setupStaticImageDemoUiComponents(fileName, true);
-            imageView.position(1);
-        } else {
-            String qrPath = Environment.getExternalStorageDirectory() + "/Pictures/";
-            Log.e("path", qrPath);
-            File imgFile = new File(qrPath, fileName);
-            Bitmap bitmap = BitmapFactory.decodeFile(qrPath + fileName);
-            bitmap = manageOrentation(imgFile, bitmap);
-            Matrix matrix = new Matrix();
-            matrix.postScale(1f, 1f);
-            int newW = (int) (bitmap.getWidth() * 0.86);
-            int newH = (int) (bitmap.getHeight() * 0.76);
-            int marginW = (int) (bitmap.getWidth() * 0.08);
-            int marginH = (int) (bitmap.getHeight() * 0.12);
-            bitmap = Bitmap.createBitmap(bitmap, marginW, marginH, newW, newH, matrix, true);
-            ImageView imageView2 = new ImageView(mContext);
-            imageView2.setScaleType(ImageView.ScaleType.FIT_XY);
+//        if (POSITION == 1) {
+//            SharedPreferences.Editor editor = sharedPref.edit();
+//            editor.putString("front", fileName);
+//            editor.apply();
+//            setupStaticImageDemoUiComponents(fileName, true);
+//            imageView.position(1);
+//        } else {
+        String qrPath = Environment.getExternalStorageDirectory() + "/Pictures/";
+        Log.e("path", qrPath);
+        File imgFile = new File(qrPath, fileName);
+        Bitmap bitmap = BitmapFactory.decodeFile(qrPath + fileName);
+        bitmap = manageOrentation(imgFile, bitmap);
+        Matrix matrix = new Matrix();
+        matrix.postScale(1f, 1f);
+        int newW = (int) (bitmap.getWidth() * 0.86);
+        int newH = (int) (bitmap.getHeight() * 0.76);
+        int marginW = (int) (bitmap.getWidth() * 0.08);
+        int marginH = (int) (bitmap.getHeight() * 0.12);
+        bitmap = Bitmap.createBitmap(bitmap, marginW, marginH, newW, newH, matrix, true);
+        ImageView imageView2 = new ImageView(mContext);
+        imageView2.setScaleType(ImageView.ScaleType.FIT_XY);
 
-            imageView2.setImageBitmap(bitmap);
-            frameLayout.removeAllViewsInLayout();
-            frameLayout.addView(imageView2);
-            imageView2.setVisibility(View.VISIBLE);
+        imageView2.setImageBitmap(bitmap);
+//            frameLayout.removeAllViewsInLayout();
+//            frameLayout.addView(imageView2);
+//            imageView2.setVisibility(View.VISIBLE);
 
-        }
+//        }
 
         views.btNext.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1764,8 +1783,8 @@ public class GloFragment extends Fragment {
                 File file2 = new File(qrPath, System.currentTimeMillis() + "gridgrlo" + ".jpg"); // the File to save , append increasing numeric counter to prevent files from getting overwritten.
                 fOut = new FileOutputStream(file2);
 
-                Bitmap pictureBitmap = viewToBitmap(imageView); // obtaining the Bitmap
-                pictureBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fOut); // saving the Bitmap to a file compressed as a JPEG with 85% compression rate
+//                Bitmap pictureBitmap = viewToBitmap(imageView); // obtaining the Bitmap
+//                pictureBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fOut); // saving the Bitmap to a file compressed as a JPEG with 85% compression rate
                 fOut.flush(); // Not really required
                 fOut.close(); // do not forget to close the stream
 
