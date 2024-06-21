@@ -200,6 +200,14 @@ public class GloFragment extends Fragment {
     private Boolean frontCheck;
     private Boolean rightCheck;
     private Boolean leftCheck;
+    private ImageView frontCap;
+    private ImageView foreheadCap;
+    private ImageView leftCap;
+    private ImageView rightCap;
+    private Bitmap bitmapFront;
+    private Bitmap bitmapForehead;
+    private Bitmap bitmapLeft;
+    private Bitmap bitmapRight;
 
     private static int[] findMaxProductIndex(ArrayList<ArrayList<Float>> arrayList) {
         float maxProduct = Float.MIN_VALUE;
@@ -257,6 +265,11 @@ public class GloFragment extends Fragment {
         imgChin = views.ivChinDot;
         imgEyeBridge = views.ivEyeBridgeDot;
         status = views.txtPositionName;
+        frontCap = views.frontView;
+        foreheadCap = views.foreheadView;
+        leftCap = views.leftView;
+        rightCap = views.rightView;
+
         App app = (App) getContext().getApplicationContext();
         sharedPref = app.getSharedPrefs();
 
@@ -1781,6 +1794,7 @@ public class GloFragment extends Fragment {
                 File file = new File(qrPath, fileName);
 
                 File file2 = new File(qrPath, System.currentTimeMillis() + "gridgrlo" + ".jpg"); // the File to save , append increasing numeric counter to prevent files from getting overwritten.
+                mainViewModel.addImage(file.getAbsolutePath());
                 fOut = new FileOutputStream(file2);
 
 //                Bitmap pictureBitmap = viewToBitmap(imageView); // obtaining the Bitmap
@@ -1792,7 +1806,7 @@ public class GloFragment extends Fragment {
                 RequestBody imageBody = RequestBody.create(file2, MediaType.parse("image/jpg"));
                 imagePart = MultipartBody.Part.createFormData("image", file2.getName(), imageBody);
                 facePosition = MultipartBody.Part.createFormData("position", "front");
-                mainViewModel.addImage(file.getAbsolutePath());
+
                 break;
             }
             case 2: {
@@ -1838,12 +1852,48 @@ public class GloFragment extends Fragment {
         bundle.putString("IS_FROM_START", "false");
 
         if (POSITION > 5) {
-            FinishFragment returnToGloHomeFragment = new FinishFragment();
-            Bundle bundle2 = new Bundle();
-            bundle2.putString("FROM", "global");
-            returnToGloHomeFragment.setArguments(bundle2);
-            getActivity().getSupportFragmentManager().popBackStack();
-            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, returnToGloHomeFragment).addToBackStack(null).commit();
+            ArrayList<String> imgList = mainViewModel.getImagesList();
+            File imgFile = new File(imgList.get(0));
+            Bitmap bitmap = BitmapFactory.decodeFile(imgList.get(0));
+            bitmap = manageOrentation(imgFile, bitmap);
+            bitmapFront = manageOrentation(imgFile, bitmap);
+
+            imgFile = new File(imgList.get(1));
+            bitmap = BitmapFactory.decodeFile(imgList.get(1));
+            bitmap = manageOrentation(imgFile, bitmap);
+            bitmapForehead = manageOrentation(imgFile, bitmap);
+
+            imgFile = new File(imgList.get(2));
+            bitmap = BitmapFactory.decodeFile(imgList.get(2));
+            bitmap = manageOrentation(imgFile, bitmap);
+            bitmapLeft = manageOrentation(imgFile, bitmap);
+
+            imgFile = new File(imgList.get(3));
+            bitmap = BitmapFactory.decodeFile(imgList.get(3));
+            bitmap = manageOrentation(imgFile, bitmap);
+            bitmapRight = manageOrentation(imgFile, bitmap);
+
+            frontCap.setImageBitmap(bitmapFront);
+            foreheadCap.setImageBitmap(bitmapForehead);
+            leftCap.setImageBitmap(bitmapLeft);
+            rightCap.setImageBitmap(bitmapRight);
+
+            views.frontView.setVisibility(View.VISIBLE);
+            views.btRetakeFront.setVisibility(View.VISIBLE);
+            views.foreheadView.setVisibility(View.VISIBLE);
+            views.btRetakeForehead.setVisibility(View.VISIBLE);
+            views.leftView.setVisibility(View.VISIBLE);
+            views.btRetakeLeft.setVisibility(View.VISIBLE);
+            views.rightView.setVisibility(View.VISIBLE);
+            views.btRetakeRight.setVisibility(View.VISIBLE);
+
+            Log.i("list_image", mainViewModel.getImagesList().toString());
+//            FinishFragment returnToGloHomeFragment = new FinishFragment();
+//            Bundle bundle2 = new Bundle();
+//            bundle2.putString("FROM", "global");
+//            returnToGloHomeFragment.setArguments(bundle2);
+//            getActivity().getSupportFragmentManager().popBackStack();
+//            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, returnToGloHomeFragment).addToBackStack(null).commit();
         } else {
             GloFragment gloCameraFragment = new GloFragment();
             gloCameraFragment.setArguments(bundle);
